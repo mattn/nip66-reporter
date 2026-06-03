@@ -27,6 +27,11 @@ const (
 	KindRelayMonitor = 10166
 )
 
+const version = "0.0.1"
+
+// revision is set at build time via -ldflags "-X main.revision=...".
+var revision = "HEAD"
+
 type arrayFlags []string
 
 func (a *arrayFlags) String() string { return strings.Join(*a, ",") }
@@ -71,6 +76,7 @@ func main() {
 	var once bool
 	var discover bool
 	var dryRun bool
+	var showVersion bool
 
 	flag.Var(&publishRelays, "relay", "relay to publish 30166/10166 events to (repeatable)")
 	flag.Var(&monitorRelays, "monitor", "relay URL to monitor (repeatable)")
@@ -82,7 +88,13 @@ func main() {
 	flag.BoolVar(&once, "once", false, "probe once and exit (for cron / systemd timers)")
 	flag.BoolVar(&discover, "discover", false, "discover additional relays from 30166/10002 on publish relays")
 	flag.BoolVar(&dryRun, "dry-run", false, "print events instead of publishing them")
+	flag.BoolVar(&showVersion, "version", false, "print version and exit")
 	flag.Parse()
+
+	if showVersion {
+		fmt.Printf("nip66-reporter v%s (%s)\n", version, revision)
+		return
+	}
 
 	seckey, err := loadSecretKey(sk)
 	if err != nil {
