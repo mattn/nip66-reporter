@@ -72,11 +72,19 @@ func probe(ctx context.Context, rawURL string, timeout time.Duration) result {
 	start = time.Now()
 	sub, err := relay.Subscribe(readCtx, nostr.Filters{{Kinds: []int{1}, Limit: 1}})
 	if err == nil {
-		select {
-		case <-sub.EndOfStoredEvents:
-			r.RTTRead = time.Since(start)
-			r.ReadOK = true
-		case <-readCtx.Done():
+		// Drain sub.Events while waiting: go-nostr dispatches messages
+		// serially, so an unread EVENT blocks delivery of the following EOSE.
+	loop:
+		for {
+			select {
+			case <-sub.Events:
+			case <-sub.EndOfStoredEvents:
+				r.RTTRead = time.Since(start)
+				r.ReadOK = true
+				break loop
+			case <-readCtx.Done():
+				break loop
+			}
 		}
 		sub.Close()
 	}
