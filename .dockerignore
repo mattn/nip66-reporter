@@ -1,0 +1,5 @@
+*.yaml
+*.sh
+.git
+/nip66-reporter
+k8s
