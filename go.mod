@@ -1,4 +1,4 @@
-module github.com/mattn/nostr-relay-monitor
+module github.com/mattn/nip66-reporter
 
 go 1.26.1
 

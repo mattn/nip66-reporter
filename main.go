@@ -1,4 +1,4 @@
-// Command nostr-relay-monitor is a NIP-66 relay monitor. It probes Nostr
+// Command nip66-reporter is a NIP-66 relay monitor. It probes Nostr
 // relays, publishes kind 30166 relay discovery events describing their
 // measured characteristics, and announces itself with a kind 10166 monitor
 // announcement.
