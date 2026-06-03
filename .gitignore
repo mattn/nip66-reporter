@@ -1,4 +1,4 @@
 /nip66-reporter
-run.sh
+*.sh
 *.env
 /k8s/
